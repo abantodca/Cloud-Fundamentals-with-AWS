@@ -136,15 +136,19 @@ def careers():
             conn.commit()
 
             # Call the function to send the SNS notification
-            send_sns_notification(
-                user_name, 
-                user_position, 
-                resume_url, 
-                user_experience, 
-                user_ctc, 
-                user_expected_ctc, 
-                user_phone_number
-            )
+            try:
+                send_sns_notification(
+                    user_name, 
+                    user_position, 
+                    resume_url, 
+                    user_experience, 
+                    user_ctc, 
+                    user_expected_ctc, 
+                    user_phone_number
+                )
+            except Exception as sns_error:
+                print(f"SNS notification failed: {str(sns_error)}")
+                return f"File '{file_name}' uploaded and application submitted, BUT email notification failed: {str(sns_error)}", 500
 
             # Return success message
             return f"File '{file_name}' uploaded successfully to S3 and your application has been submitted."

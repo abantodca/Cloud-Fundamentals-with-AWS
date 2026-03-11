@@ -1,6 +1,5 @@
 import boto3
 import os
-from botocore.exceptions import NoCredentialsError
 
 # Initialize the SNS client
 sns_client = boto3.client(
@@ -27,15 +26,10 @@ def send_sns_notification(user_name, user_position, resume_url, user_experience,
     # Construct the SNS message subject
     sns_subject = f"{user_name} has applied for {user_position}"
 
-    try:
-        # Publish the message to SNS
-        sns_client.publish(
-            TopicArn=SNS_TOPIC_ARN,
-            Message=sns_message_body,
-            Subject=sns_subject
-        )
-        print(f"Notification sent to SNS for {user_name} applying for {user_position}")
-    except NoCredentialsError:
-        print("No AWS credentials found. Unable to send SNS notification.")
-    except Exception as e:
-        print(f"An error occurred while sending SNS notification: {str(e)}")
+    # Publish the message to SNS (raises exception on failure)
+    response = sns_client.publish(
+        TopicArn=SNS_TOPIC_ARN,
+        Message=sns_message_body,
+        Subject=sns_subject
+    )
+    print(f"Notification sent to SNS for {user_name} applying for {user_position}. MessageId: {response.get('MessageId')}")

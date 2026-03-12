@@ -137,7 +137,7 @@ def careers():
 
             # Call the function to send the SNS notification
             try:
-                send_sns_notification(
+                sns_message_id = send_sns_notification(
                     user_name, 
                     user_position, 
                     resume_url, 
@@ -151,7 +151,12 @@ def careers():
                 return f"File '{file_name}' uploaded and application submitted, BUT email notification failed: {str(sns_error)}", 500
 
             # Return success message
-            return f"File '{file_name}' uploaded successfully to S3 and your application has been submitted."
+            return (
+                f"✅ Aplicacion enviada exitosamente.\n"
+                f"  - Archivo '{file_name}' subido a S3.\n"
+                f"  - Datos guardados en la base de datos.\n"
+                f"  - Notificacion SNS enviada al equipo de Careers. (MessageId: {sns_message_id})"
+            )
 
         except NoCredentialsError:
             return "Credentials not available", 400

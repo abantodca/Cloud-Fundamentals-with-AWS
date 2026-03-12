@@ -45,4 +45,6 @@ def send_sns_notification(user_name, user_position, resume_url, user_experience,
         Message=sns_message_body,
         Subject=sns_subject
     )
-    print(f"Notification sent to SNS for {user_name} applying for {user_position}. MessageId: {response.get('MessageId')}")
+    message_id = response.get('MessageId')
+    print(f"Notification sent to SNS for {user_name} applying for {user_position}. MessageId: {message_id}")
+    return message_id
